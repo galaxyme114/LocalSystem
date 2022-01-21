@@ -1,0 +1,141 @@
+{% extends 'basic.html' %}
+
+{% block style %}
+    {% load static %}
+    <!-- Sweetalert Css -->
+    <link href="{% static 'theme/plugins/sweetalert/sweetalert.css' %}" rel="stylesheet" />
+    <link href="{% static 'theme/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css' %}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+    <section class="content">
+        <div class="container-fluid">
+            
+            <!-- Basic Examples -->
+            <div class="row clearfix">
+                <div class="col-lg-8 col-md-6 col-sm-12 col-xs-12">
+                    <div class="header">
+                        <a class="btn btn-primary waves-effect" href="{% url 'categoryadd' %}">AÑADIR CATEGORIE</a>
+                        <h2>CATEGORIE</h2>
+                    </div>
+                    <div class="card" style="padding: 10px;">
+                        <div class="body">
+                            <table class="table color-table primary-table js-basic-example dataTable">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Categorie</th>
+                                        <th scope="col" class="text-center">Modificar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>	
+                                {% if categorys %}	
+                                    {% for category in categorys %}
+                                    <tr class="text-left">
+                                        <td class="text-left">{{category.name}}</td>                                
+                                        <td class="text-center" style="vertical-align: middle">
+                                            <a href="{% url 'categoryupdate' category.id %}"><i class="fa fa-pencil"></i></a>&nbsp;
+                                            <a href="#" onclick="delete_category('{{category.id}}')"><i class="fa fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                    
+    								
+                                    {% endfor %}
+                                {% else %}
+                                    <td style="padding-bottom:30px;">No existen Categorie</td>
+    							{% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Delete Category-->
+            <div class="modal fade" id="delete-category" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog modal-xs">
+                    <div class="modal-content" style="border-radius: 15px;">
+                        <div class="modal-header" style="background-color: #7f9bcd; border-top-right-radius: 10px; border-top-left-radius: 10px;">
+                            <div class="align-items-center">
+                                <p class="modal-title" id="exampleModalLongTitle" style="color: white;"><i class="fa fa-trash"></i>&nbsp;&nbsp;ELIMINAR CATEGORIE</p>
+                            </div>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true" style="color: #fff;">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-12">
+                                <h5>¿Está seguro que quiere eliminar este registro?</h5>
+                            </div>
+                        </div>
+                        <input type="hidden" id="catergory_id_sel" value="-1" />
+                        <div class="modal-footer">
+                            <center>
+                                <button id="delete-button" class="btn btn-primary waves-effect">SI</button>
+                                <button data-dismiss="modal" class="btn btn-danger waves-effect">NO</button>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block script %}
+    <!-- SweetAlert Plugin Js -->
+    <script src="{% static 'theme/plugins/sweetalert/sweetalert.min.js' %}"></script>
+    <script src="{% static 'theme/plugins/jquery-datatable/jquery.dataTables.js' %}"></script>
+    <script src="{% static 'theme/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js' %}"></script>
+    <script>
+        $('.js-basic-example').DataTable({
+            responsive: true,
+            "oLanguage": {
+                "sLengthMenu":     "Mostrar _MENU_ registros",
+                "sZeroRecords":    "No se encontraron resultados",
+                "sEmptyTable":     "Ningún dato disponible en esta tabla =(",
+                "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                "sInfoPostFix":    "",
+                "sSearch":         "Buscar:",
+                "sUrl":            "",
+                "sInfoThousands":  ",",
+                "sLoadingRecords": "Cargando...",
+                "oPaginate": {
+                    "sFirst":    "Primero",
+                    "sLast":     "Último",
+                    "sNext":     "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                "oAria": {
+                    "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                },
+                "buttons": {
+                    "copy": "Copiar",
+                    "colvis": "Visibilidad"
+                }
+            }
+        });
+        function delete_category(id){
+            console.log(id);
+            $("#catergory_id_sel").val(id);
+            $("#delete-category").modal();
+        }
+        $('#delete-button').click(function(e){
+            var value = $("#catergory_id_sel").val();
+            var url = "{% url 'delete_category' %}";
+            var token = '{{csrf_token}}';
+            $.ajax({
+                headers: { "X-CSRFToken": token },
+                method: 'POST',
+                url: url,
+                data: {
+                    'value': value
+                },
+                success: function(data) {
+                    if(data == 'Ok') {
+                        location.reload();
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

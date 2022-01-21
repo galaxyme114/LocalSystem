@@ -1,0 +1,192 @@
+{% extends 'basic.html' %}
+{% block style %}
+    {% load static %}
+    <!-- Sweetalert Css -->
+    <link href="{% static 'theme/plugins/sweetalert/sweetalert.css' %}" rel="stylesheet" />
+    <style>
+        .custom-file-input {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: calc(1.5em + .75rem + 2px);
+            margin: 0;
+            opacity: 0;
+        }
+        .custom-file-label {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            z-index: 1;
+            height: calc(1.75em + .75rem + 2px);
+            padding: .5rem .75rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+        }
+        .custom-file {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            height: calc(1.5em + .75rem + 2px);
+            margin-bottom: 20px;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Basic Examples -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>Nuevo Gastos Repetidos</h2>
+                        </div>
+                        <form action="." id="spenses" method="post" target="_parent" enctype='multipart/form-data'>
+                            {% csrf_token %}
+                            <div class="body" style="padding: 20px 60px">
+                                <div class="list-unstyled row clearfix">
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>Empresa</label>
+                                            <select id="company" name='company' class="selectpicker form-control" data-live-search="true" required>
+                                                <option value="">----------------------------</option>
+                                                {% for company in companys %}
+                                                    <option value={{company.id}}>{{ company }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>Cantidad(€)</label>
+                                            <input id="amount" name="amount" type="text" class="form-control" placeholder="Cantidad" required="True">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>Proovedor</label>
+                                            <select id="supplier" name='supplier' class="selectpicker form-control" data-live-search="true" required>
+                                                <option value="">----------------------------</option>
+                                                {% for supplier in suppliers %}
+                                                    <option value={{supplier.id}}>{{ supplier }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12"> 
+                                            <label>Tipo de IVA</label><br>
+                                            <input id="vat_rate" name="vat_rate" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12"> 
+                                            <label>&nbsp;</label><br>
+                                            <input id="vat_amount" name="vat_amount" class="form-control" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>Fecha</label><br>
+                                            <input id="date" name="date" required/>
+                                        </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12"> 
+                                            <label>Total Neto Cantidad(€)</label><br>
+                                            <input id="real_amount" name="real_amount" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+                                            <label>Periodo de Repetición</label><br>
+                                            <input type="number" id="period" name="period" class="form-control" required min="1"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <textarea id="description" name="description" type="text" class="form-control" placeholder="Note:" rows="10" class="w-100" ></textarea>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>Factura</label>
+                                            <div class="custom-file">
+                                                <label id="pdf-file-input" class="custom-file-label" for="file"><i class="fa fa-file"></i>&nbsp;&nbsp;Añadir Factura</label>
+                                                <input type='file' class='custom-file-input' id='invoice' name='file'/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <input type="hidden" id="repeat" name="repeat" value="dddd"/>
+                                    <input type="hidden" id="iva" name="iva" />
+                                    <input type="hidden" id="category" name="category" />
+                                    <input type="hidden" value="{{ user.id }}" name="user">
+                                </div>
+                            </div>                 
+                        <div class="col-12" style="text-align: center; padding-bottom: 50px;">
+                            <button id="submit" class="btn btn-primary waves-effect" type="submit">ACTUALIZAR</button>    
+                            <a class="btn btn-danger waves-effect" href="{% url 'repeats' %}">CANCELAR</a></center>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block script %}
+    <script>
+        $('#spenses').submit(function() {
+          var amount_str = $('#amount').val();
+          $('#amount').val(amount_str.replace(',', '.'));
+        });
+        $('#date').datepicker({
+            format: 'yyyy-mm-dd',
+            });
+        //Invoice
+        $('#invoice').on('change', function(event){
+            var inputFile = event.currentTarget;
+            if(inputFile.files[0].name.length <= 20){
+                $(inputFile).parent()
+                    .find('#pdf-file-input')
+                    .html(inputFile.files[0].name.substring(0,20));
+            }
+            else {
+                $(inputFile).parent()
+                    .find('#pdf-file-input')
+                    .html(inputFile.files[0].name.substring(0,20)+'...');
+            }
+        });
+        var json_sup = '{{ suppliers_json|safe }}';
+        json_sup = json_sup.replace(/\r/gi, "\\r").replace(/\n/gi, "\\n");
+        json_sup = JSON.parse(json_sup);
+        $("#supplier").on("change", function(){
+            console.log(json_sup);
+            for(var k in json_sup) {
+                               
+                if(json_sup[k].pk == $("#supplier").val()){
+                    $("#iva").val(json_sup[k].fields.iva);
+                    $("#category").val(json_sup[k].fields.category);
+                    if(json_sup[k].fields.vat_rate == null){
+                        $("#vat_rate").val(0 +"%");
+                    }else{
+                        $("#vat_rate").val(json_sup[k].fields.vat_rate + "%");
+                    }
+                    cal_real_amount();
+                    return;
+                }
+            }
+
+        });
+        $("#amount").on('keyup', function(){
+            cal_real_amount();
+        });
+        function cal_real_amount(){
+            var amount_str = $('#amount').val().replace(",", ".");
+            var tax_rate = $("#vat_rate").val().replace("%", "");
+            if(tax_rate != "" && amount_str != "" && !isNaN(parseFloat(amount_str)) && isFinite(amount_str)){
+                var vat_amount = parseInt(tax_rate) * parseFloat(amount_str)/100;
+                vat_amount = vat_amount.toFixed(2);
+                var real_amount = parseFloat(amount_str) - vat_amount;
+                $("#vat_amount").val(vat_amount);
+                $("#real_amount").val(real_amount.toFixed(2));
+            }
+        }
+    </script>
+    <!-- SweetAlert Plugin Js -->
+    <script src="{% static 'theme/plugins/sweetalert/sweetalert.min.js' %}"></script>
+{% endblock %}

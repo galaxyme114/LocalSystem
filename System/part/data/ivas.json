@@ -1,0 +1,23 @@
+[
+    {
+      "model": "part.iva",
+      "pk": 1,
+      "fields": {
+        "name": "Español"
+      }
+    },
+    {
+        "model": "part.iva",
+        "pk": 2,
+        "fields": {
+          "name": "Intracomunitario"
+        }
+      },
+      {
+        "model": "part.iva",
+        "pk": 3,
+        "fields": {
+          "name": "Extracomunitario"
+        }
+      }
+]

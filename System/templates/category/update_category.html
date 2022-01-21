@@ -1,0 +1,46 @@
+{% extends 'basic.html' %}
+{% block style %}
+    {% load static %}
+    <!-- Sweetalert Css -->
+    <link href="{% static 'theme/plugins/sweetalert/sweetalert.css' %}" rel="stylesheet" />
+{% endblock %}
+{% block content %}
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Basic Examples -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>Actualizar Categorie</h2>
+                        </div>
+                        <form action="." id="category_update" class="form-horizontal" method="post" target="_parent" enctype='multipart/form-data'>
+                            {% csrf_token %}
+                            <div class="body" style="padding: 20px 60px">
+                                <div class="list-unstyled row clearfix">
+                                    <div class="form-group"> 
+                                        <label class="col-sm-2 control-label">Nombre de Categorie</label>
+                                        
+                                        <div class="col-sm-6">
+                                            <div class="form-line">
+                                                {{form.name}}
+                                            </div>
+                                        </div>
+                                    </div>   
+                                </div>
+                            </div>                 
+                        <div class="col-12" style="text-align: center; padding-bottom: 50px;">
+                            <button id="submit" class="btn btn-primary waves-effect" type="submit">ACTUALIZAR</button>    
+                            <a class="btn btn-danger waves-effect" href="{% url 'category' %}">CANCELAR</a></center>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block script %}
+    <!-- SweetAlert Plugin Js -->
+    <script src="{% static 'theme/plugins/sweetalert/sweetalert.min.js' %}"></script>
+{% endblock %}

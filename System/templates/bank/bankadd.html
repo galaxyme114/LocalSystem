@@ -1,0 +1,124 @@
+{% extends 'basic.html' %}
+{% block style %}
+    {% load static %}
+    <!-- Sweetalert Css -->
+    <link href="{% static 'theme/plugins/sweetalert/sweetalert.css' %}" rel="stylesheet" />
+    <style>
+        .custom-file-input {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: calc(1.5em + .75rem + 2px);
+            margin: 0;
+            opacity: 0;
+        }
+        .custom-file-label {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            z-index: 1;
+            height: calc(1.75em + .75rem + 2px);
+            padding: .5rem .75rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+        }
+        .custom-file {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            height: calc(1.5em + .75rem + 2px);
+            margin-bottom: 0;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Basic Examples -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>Añadir Banco</h2>
+                        </div>
+                        <form action="." id="bank" method="post" target="_parent" enctype='multipart/form-data'>
+                            {% csrf_token %}
+                            <div class="body" style="padding: 20px 60px">
+                                <div class="list-unstyled row clearfix">
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>Fecha</label><br>
+                                            <input id="date" name="date" required/>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>Doc Bancario</label>
+                                            <div class="custom-file">
+                                                <label id="pdf-file-input" class="custom-file-label" for="file"><i class="fa fa-file"></i>&nbsp;&nbsp;Añadir doc Bancario</label>
+                                                <input type='file' class='custom-file-input' id='invoice' name='invoice_name' required/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+                                            <label>Proovedor</label><br>
+                                            <input id="supplier" name="supplier_name" type="text" class="form-control" required/>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+                                            <label>Comienzo</label>
+                                            <input id="bank_search_start" name="bank_search_start" required/>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12"> 
+                                            <label>Final</label>
+                                            <input id="bank_search_end" name="bank_search_end" required/>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" value="{{ user.id }}" name="user">
+                                </div>
+                            </div>                 
+                        <div class="col-12" style="text-align: center; padding-bottom: 50px;">
+                            <button id="submit" class="btn btn-primary waves-effect" type="submit">ACTUALIZAR</button>    
+                            <a class="btn btn-danger waves-effect" href="{% url 'banklist' %}">CANCELAR</a></center>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block script %}
+    <script>
+        $('#date').datepicker({
+            format: 'yyyy-mm-dd',
+            });
+
+        $('#bank_search_start').datepicker({
+            format: 'yyyy-mm-dd',
+            });
+
+        $('#bank_search_end').datepicker({
+            format: 'yyyy-mm-dd',
+            });
+        //Invoice
+        $('#invoice').on('change', function(event){
+            var inputFile = event.currentTarget;
+            if(inputFile.files[0].name.length <= 20){
+                $(inputFile).parent()
+                    .find('#pdf-file-input')
+                    .html(inputFile.files[0].name.substring(0,20));
+            }
+            else {
+                $(inputFile).parent()
+                    .find('#pdf-file-input')
+                    .html(inputFile.files[0].name.substring(0,20)+'...');
+            }
+        });
+    </script>
+    <!-- SweetAlert Plugin Js -->
+    <script src="{% static 'theme/plugins/sweetalert/sweetalert.min.js' %}"></script>
+{% endblock %}

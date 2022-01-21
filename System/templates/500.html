@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>500 | Error</title>
+
+    {% load static %}
+    <!-- Favicon-->
+    <link rel="icon" href="{% static 'theme/favicon.ico' %}" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="{% static 'theme/plugins/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'theme/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="{% static 'theme/plugins/node-waves/waves.css' %}" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="{% static 'theme/css/style.css' %}" rel="stylesheet">
+</head>
+
+<body class="five-zero-zero">
+    <div class="five-zero-zero-container">
+        <div class="error-code">500</div>
+        <div class="error-message">Error de servidor interno</div>
+        <div class="button-place">
+            <a href="{% url 'index' %}" class="btn btn-default btn-lg waves-effect">IR A LA PÁGINA DE INICIO</a>
+        </div>
+    </div>
+
+    <!-- Jquery Core Js -->
+    <script src="{% static 'theme/plugins/jquery/jquery.min.js' %}"></script>
+    <!-- Bootstrap Core Js -->
+    <script src="{% static 'theme/plugins/bootstrap/js/bootstrap.js' %}"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="{% static 'theme/plugins/node-waves/waves.js' %}"></script>
+</body>
+
+</html>

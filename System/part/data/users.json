@@ -1,0 +1,19 @@
+[
+  {
+    "model": "part.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$150000$Opc3eWwQQrOU$V2qCsrP3cWIrn2k2Ji3umAzQkWx7So0CwOCzpb1RxM4=",
+      "last_login": "2020-01-05T10:54:26.769Z",
+      "is_superuser": true,
+      "username": "admin",
+      "first_name": "",
+      "last_name": "",
+      "email": "admin@admin.com",
+      "is_staff": true,
+      "is_active": true,
+      "flag": true,
+      "date_joined": "2020-01-04T18:27:51Z"
+    }
+  }
+  ]

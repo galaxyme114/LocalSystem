@@ -1,0 +1,103 @@
+{% extends 'basic.html' %}
+
+{% block style %}
+    {% load static %}
+    <!-- Sweetalert Css -->
+    <link href="{% static 'theme/plugins/sweetalert/sweetalert.css' %}" rel="stylesheet" />
+{% endblock %}
+{% block content %}
+    <section class="content">
+        <div class="container-fluid">
+            <div class="header">
+                <h2>HOME</h2>
+            </div>
+            <!-- Basic Examples -->
+            <div class="row clearfix">
+                <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                    <div class="info-box hover-expand-effect">
+                        <div class="icon bg-red">
+                            <a href="{% url 'companylist' %}"><i class="material-icons">business_center</i></a>
+                        </div>
+                        <div class="content">
+                            <div class="text">EMPRESA</div>
+                            <div class="number count-to">{{company_num}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                    <div class="info-box hover-expand-effect">
+                        <div class="icon bg-indigo">
+                            <a href="{% url 'supplier' %}"><i class="material-icons">public</i></a>
+                        </div>
+                        <div class="content">
+                            <div class="text">PROOVEDOR</div>
+                            <div class="number count-to">{{supplier_num}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                    <div class="info-box hover-expand-effect">
+                        <div class="icon bg-purple">
+                            <a href="{% url 'spenses' %}"><i class="material-icons">shopping_cart</i></a>
+                        </div>
+                        <div class="content">
+                            <div class="text">GASTOS</div>
+                            <h4><span class="label label-danger">{{empty}}</span></h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                    <div class="info-box hover-expand-effect">
+                        <div class="icon bg-deep-purple">
+                            <a href="{% url 'userinformation' request.user.id %}"><i class="material-icons">contacts</i></a>
+                        </div>
+                        <div class="content">
+                            <div class="text">DATOS PERSONALES</div>
+                            <div class="number count-to">{{user.username}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                    <div class="info-box hover-zoom-effect">
+                        <div class="icon bg-pink">
+                            <a href="{% url 'category' %}"><i class="material-icons">bookmark_border</i></a>
+                        </div>
+                        <div class="content">
+                            <div class="text">CATEGORIE</div>
+                            <div class="number">{{category_num}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                    <div class="info-box hover-zoom-effect">
+                        <div class="icon bg-blue">
+                            <a href="{% url 'statistic' %}"><i class="material-icons">assessment</i></a>
+                        </div>
+                        <div class="content">
+                            <div class="text">ESTADISTICAS</div>
+                            <div class="number"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                    <div class="info-box hover-zoom-effect">
+                        <div class="icon bg-light-blue">
+                            <a href="{% url 'banklist' %}"><i class="material-icons">report</i></a>
+                        </div>
+                        <div class="content">
+                            <div class="text">BANCO</div>
+                            <div class="number">{{bank_num}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+{% endblock %}
+{% block script %}
+    <!-- SweetAlert Plugin Js -->
+    <script src="{% static 'theme/plugins/sweetalert/sweetalert.min.js' %}"></script>
+{% endblock %}

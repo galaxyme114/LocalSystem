@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Sign Up</title>
+    <!-- Favicon-->
+    {% load static %}
+    <link rel="icon" href="{% static 'theme/favicon.ico' %}" type="image/x-icon">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+    <!-- Bootstrap Core Css -->
+    <link href="{% static 'theme/plugins/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+    <!-- Waves Effect Css -->
+    <link href="{% static 'theme/plugins/node-waves/waves.css' %}" rel="stylesheet" />
+    <!-- Animation Css -->
+    <link href="{% static 'theme/plugins/animate-css/animate.css' %}" rel="stylesheet" />
+    <!-- Custom Css -->
+    <link href="{% static 'theme/css/style.css' %}" rel="stylesheet">
+</head>
+
+<body class="signup-page">
+    <div class="signup-box">
+        <div class="logo">
+            <a href="javascript:void(0);"><b>REGISTRARSE</b></a>
+        </div>
+        <div class="card">
+            <div class="body">
+                <form id="sign_up" action='{% url 'signup' %}' method="POST" enctype='multipart/form-data'>
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">person</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="text" class="form-control" id="id_username" name="username" placeholder="Usuario" value="{{ username }}" required autofocus>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">person_outline</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="text" class="form-control" id="id_firstname" name="firstname" placeholder="Nombre" value="{{ firs_tname }}" required autofocus>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">perm_identity</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="text" class="form-control" id="id_lastname" name="lastname" placeholder="Apellido" value="{{ last_name }}" required autofocus>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">email</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="email" class="form-control" name="email" placeholder="Dirección de correo electrónico" value="{{ email }}" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">lock</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="password" class="form-control" id="id_password1" name="password1" minlength="6" placeholder="Contraseña" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">lock</i>
+                        </span>
+                        <div class="form-line">
+                            <input type="password" class="form-control" id="id_password2" name="password2" minlength="6" placeholder="Confirmar Contraseña" required>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-block btn-lg bg-pink waves-effect" type="submit">REGÍSTRATE</button>
+                    <div class="row m-t-25 m-b--5 align-center">
+                        <div class="col-xs-12">
+                            <a href="{% url 'login' %}">¿Ya tienes membresía?</a>
+                        </div>
+                    </div>
+                </form>
+                {% if error %}
+                    <div style="text-align: center">
+                        <p class="label label-danger align-center" style="font-size: 14.9px;">
+                            {{ error }}
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Jquery Core Js -->
+    <script src="{% static 'theme/plugins/jquery/jquery.min.js' %}"></script>
+
+    <!-- Bootstrap Core Js -->
+    <script src="{% static 'theme/plugins/bootstrap/js/bootstrap.js' %}"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="{% static 'theme/plugins/node-waves/waves.js' %}"></script>
+
+    <!-- Validation Plugin Js -->
+    <script src="{% static 'theme/plugins/jquery-validation/jquery.validate.js' %}"></script>
+
+    <!-- Custom Js -->
+    <script src="{% static 'theme/js/admin.js' %}"></script>
+    <script src="{% static 'theme/js/pages/examples/sign-up.js' %}"></script>
+</body>
+
+</html>

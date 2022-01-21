@@ -1,0 +1,83 @@
+<div class="card" style="padding: 10px;" id="search_hidden">
+       
+    <div style="padding: 15px; width:100%;">
+        <div class="col-lg-1">
+            <label>INICIO: </label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="padding-bottom:10px;">
+            <input id="start_date" name="start_date" value="{{start_date}}" required/>	
+        </div>
+        <div class="col-lg-1">
+            <label>FIN: </label>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="padding-bottom:10px;">
+            <input id="end_date" name="end_date" value="{{end_date}}" required/>
+        </div>
+        <div class="col-lg-2 col-md-6 col-sm-6 col-xs-12" style="padding-bottom:10px;">
+            <button id="search_button" class="btn btn-primary">Buscar</button>
+        </div> 
+    </div>
+    <table class="table color-table primary-table">
+        <thead>
+            <tr>
+                <th scope="col">FECHA</th>
+                <th scope="col">CONCEPTO</th>
+                <th scope="col">IMPORTE</th>
+            </tr>
+        </thead>
+        <tbody>	
+        {% if spenses %}	
+            {% for spense in spenses %}
+            <tr class="text-left">
+                <td class="text-left">{{spense.date|date:"Y-m-d"}}</td> 
+                <td class="text-left">{{spense.supplier.name}}</td>   
+                <td class="text-left">{{spense.amount}}</td>                   
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr><td colspan="3" style="padding-bottom:30px;">No existen Gastos</td></tr>
+        {% endif %}
+        </tbody>
+    </table>
+    
+</div>
+{% block script %}
+<script>
+    $('#start_date').datepicker({
+        format: 'yyyy-mm-dd',
+        maxDate: function () {
+        return $('#end_date').val();
+        }
+    });
+    $('#end_date').datepicker({
+        format: 'yyyy-mm-dd',
+        minDate: function () {
+        return $('#start_date').val();
+    }
+    });
+    $("#search_button").on('click', function(){
+        var token = '{{csrf_token}}';
+        var value = {{value}};
+        var start_date = $("#start_date").val();
+        var end_date = $("#end_date").val();
+        var my_url = '{% url "bankdetail" value %}';
+        if(start_date !== "" && end_date !== ""){
+            $.ajax({
+                headers: { "X-CSRFToken": token },
+                method: 'POST',
+                url: my_url,
+                data: {
+                    'start_date': start_date,
+                    'end_date': end_date,
+                    'value': value
+                },
+                success: function(data) {
+                    $('#search_hidden').html(data);
+                }
+            });
+        }
+        
+    })
+</script>
+
+{% endblock %}

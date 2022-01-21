@@ -1,0 +1,290 @@
+{% extends 'basic.html' %}
+
+{% block style %}
+    {% load static %}
+    <!-- Sweetalert Css -->
+    <link href="{% static 'theme/plugins/sweetalert/sweetalert.css' %}" rel="stylesheet" />
+{% endblock %}
+{% block content %}
+{% load mathfilters %}
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
+                    <div class="header">
+                        <h2>ESTADISTICAS</h2>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <h4><a href="{% url 'spenses' %}">Gastos</a></h4>
+                        
+                        <div class="card" style="padding: 10px;">
+                            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12" style="margin-top: 10px;">
+                                <select id="sel_category" class="selectpicker form-control" data-style="btn btn-success waves-effect" data-live-search="true" >
+                                    <option value="0">CATEGORIE</option>
+                                    {% for category in categorys %}
+                                        <option value={{category.id}}>{{ category }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <input type="hidden" id="user_id" value="{{ user.id }}" />
+                            <button class="btn btn-primary waves-effect btn_company" style="margin: 10px;" href="#">EMPRESA</button>
+                            <center>
+                                <div id="piechart_3d_paid" style="width: 700px; height: 500px;"></div>
+                            </center>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <h4><a href="{% url 'spenses' %}">Tax</a></h4>
+                        <div class="card" style="padding: 10px;">
+                            <center>
+                                <div id="statistic_tax" style="width: 700px; height: 500px;"></div>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <h4><a href="{% url 'spenses' %}">Factura</a></h4>
+                        <div class="card" style="padding: 10px;">
+                            <center>
+                                <div id="piechart_3d_invoice" style="width: 700px; height: 500px;"></div>
+                            </center>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <h4><a href="#">Beneficio</a></h4>
+                        <div class="card" style="padding: 10px;width: 700px; height: 530px;">
+                            <div class="col-lg-12">
+                                <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12" style="margin-top: 15px;">
+                                    <label>Empresa</label>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="margin-top: 10px;">
+                                    <select id="sel_company" class="selectpicker form-control"  data-live-search="true" >
+                                        {% for company in statistic_benefit %}
+                                            <option value={{company.0}}>{{ company.1 }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="margin-top: 75px;">
+                                    <label>Total of tipo de IVA : {{sums_iva.sum_iva|abs|floatformat:"2"}}</label>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="margin-top: 70px;">
+                                    <label id="comp_tax_sum">Empresa Total of tipo de IVA : </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="margin-top: 25px;">
+                                    <label>Total Neto Cantidad : {{sum|sub:sums_iva.sum_iva|abs|floatformat:"2"}}</label>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="margin-top: 20px;">
+                                    <label id="comp_net_sum">Empresa Total Neto Cantidad : </label>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12" style="margin-top: 45px;">
+                                    <label>Ventas</label>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="margin-top: 40px;">
+                                    <input id="ventas_amount" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12" style="margin-top: 25px;">
+                                    <label>Materiales</label>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="margin-top: 20px;">
+                                    <input id="material_amount" class="form-control" disabled />
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12" style="margin-top: 25px;">
+                                    <label>Beneficio</label>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="margin-top: 20px;">
+                                    <input id="benefit_amount" class="form-control" disabled />
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12" style="margin-top: 25px;">
+                                    <label>Gastos</label>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="margin-top: 20px;">
+                                    <input id="gasto_amount" class="form-control" disabled />
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12" style="margin-top: 25px;">
+                                    <label>Impuesto</label>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="margin-top: 20px;">
+                                    <input id="impuesto_amount" class="form-control" disabled />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+    </section>
+{% endblock %}
+{% block script %}
+    {% csrf_token %}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load("current", {packages:["corechart"]});
+        google.charts.setOnLoadCallback(drawChartSpense);
+        var array_positive = {{statistics_spenses|safe}};
+        var array_company = {{statistics_company_spenses|safe}};
+        var arr_benefit = {{statistic_benefit|safe}};
+        var chart_spense;
+        function drawChartSpense() {
+            var data = google.visualization.arrayToDataTable(array_positive);
+            var options = {
+              title: 'Cantidad total:  {{sum|floatformat:"2"}}',
+              is3D: true,
+            };
+
+            chart_spense = new google.visualization.PieChart(document.getElementById('piechart_3d_paid'));
+            chart_spense.draw(data, options);
+        }
+        $('#start_date').datepicker({
+            format: 'yyyy-mm-dd',
+            maxDate: function () {
+                return $('#end_date').val();
+            }
+        });
+        $('#end_date').datepicker({
+            format: 'yyyy-mm-dd',
+            minDate: function () {
+                return $('#start_date').val();
+            }
+        });
+        $("#sel_category").on("change", function(){
+            $(".btn_company").removeClass('btn-success');
+            $(".btn_company").addClass('btn-primary');
+            var sel_val = $(this).val();
+            $('#sel_category').selectpicker('setStyle', 'btn-success');
+            $('#sel_category').selectpicker('setStyle', 'btn-primary', 'remove');
+            $("#sel_category").selectpicker('refresh');
+            
+            if (sel_val == "0"){
+                var data = google.visualization.arrayToDataTable(array_positive);
+                var options = {
+                  title: 'Cantidad total:  {{sum|floatformat:"2"}}',
+                  is3D: true,
+                };
+                chart_spense.draw(data, options);
+            }else{
+                var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+                $.ajax({
+                    url: '{% url "ajax_stat_category" %}',
+                    data: {
+                      category_id: sel_val,
+                      user_id: $("#user_id").val(),
+                    },
+                    headers:{
+                        "X-CSRFToken": csrftoken
+                    },
+                    type: 'post',
+                    success: function (msg) {
+                        arr_json = JSON.parse(msg.category_company)
+                        var data_arr = google.visualization.arrayToDataTable(arr_json);
+                        chart_spense.clearChart();    
+                        var options = {
+                          title: 'Cantidad total:  ' + parseFloat(msg.sum).toFixed(2).toString().replace('.', ','),
+                          is3D: true,
+                        };
+                        chart_spense.draw(data_arr, options);
+                    }
+                });
+            }
+        });
+        $(".btn_company").on("click", function(){
+            $('#sel_category').selectpicker('setStyle', 'btn-success', 'remove');
+            $('#sel_category').selectpicker('setStyle', 'btn-primary');
+            $("#sel_category").val('0');
+            $("#sel_category").selectpicker('refresh');
+            
+            $(".btn_company").removeClass('btn-primary');
+            $(".btn_company").addClass('btn-success');
+            var data = google.visualization.arrayToDataTable(array_company);
+            var options = {
+              title: 'Cantidad total:  {{sum|floatformat:"2"}}',
+              is3D: true,
+            };
+            chart_spense.draw(data, options);
+        });
+        var material = 0;
+        var sum_all = 0;
+        var gasto = 0;
+        change_company($("#sel_company").val());
+        $("#sel_company").on("change", function(){
+            change_company($("#sel_company").val());
+        });
+        $("#ventas_amount").on('keyup', function(){
+            var ventas = $('#ventas_amount').val().replace(",", ".");
+            var benefit = parseFloat(ventas)- material;
+            $("#benefit_amount").val(benefit.toFixed(2).toString().replace(".", ","));
+            $("#impuesto_amount").val((benefit - gasto).toFixed(2).toString().replace(".", ","));
+
+        });
+        function change_company(comp_id){
+            for(var i=0; i<arr_benefit.length; i++){
+                if(arr_benefit[i][0] == comp_id){
+                    material = arr_benefit[i][3];
+                    sum_all = arr_benefit[i][2];
+                    gasto = sum_all - material;
+                    $("#ventas_amount").val("");
+                    $("#benefit_amount").val("");
+                    $("#impuesto_amount").val("");
+                    $("#material_amount").val(material.toFixed(2).toString().replace(".", ","));
+                    $("#gasto_amount").val(gasto.toFixed(2).toString().replace(".", ","));
+                    $("#comp_tax_sum").html("Empresa Total of tipo de IVA : " + arr_benefit[i][4].toFixed(2).toString().replace(".", ","));
+                    $("#comp_net_sum").html("Empresa Total Neto Cantidad : " + (sum_all - arr_benefit[i][4]).toFixed(2).toString().replace(".", ","));
+                }
+            }
+        }
+    </script>
+    <script type="text/javascript">
+      
+    </script>
+    <script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      var array_tax = {{statistic_taxs|safe}};
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable(array_tax);
+
+        var options = {
+          title: '',
+          is3D: true,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('statistic_tax'));
+        chart.draw(data, options);
+      }
+    </script>
+
+    <script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      var array_invoice = {{invoice|safe}};
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable(array_invoice);
+
+        var options = {
+          title: '',
+          is3D: true,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart_3d_invoice'));
+        chart.draw(data, options);
+      }
+    </script>
+    <!-- SweetAlert Plugin Js -->
+    <script src="{% static 'theme/plugins/sweetalert/sweetalert.min.js' %}"></script>
+{% endblock %}

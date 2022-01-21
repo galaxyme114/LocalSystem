@@ -1,0 +1,221 @@
+{% extends 'basic.html' %}
+{% block style %}
+    {% load static %}
+    <!-- Sweetalert Css -->
+    <link href="{% static 'theme/plugins/sweetalert/sweetalert.css' %}" rel="stylesheet" />
+
+    <style>
+        .custom-file-input {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: calc(1.5em + .75rem + 2px);
+            margin: 0;
+            opacity: 0;
+        }
+        .custom-file-label {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            z-index: 1;
+            height: calc(1.75em + .75rem + 2px);
+            padding: .5rem .75rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+        }
+        .custom-file {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            height: calc(1.5em + .75rem + 2px);
+            margin-bottom: 0;
+        }
+        .form-check-label{
+            font-size:14px !important;
+            font-weight: 700 !important;
+        }
+        
+    </style>
+{% endblock %}
+{% block content %}
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Basic Examples -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>Actualizar Gastos Repetidos</h2>
+                        </div>
+                        <form action="." id="spenses_update" method="POST" target="_parent" enctype='multipart/form-data'>
+                            {% csrf_token %}
+                            <div class="body" style="padding: 20px 60px">
+                                <div class="list-unstyled row clearfix">
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>Empresa</label>
+                                            <select class="selectpicker form-control" data-live-search="true" {{form.company}}
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>Cantidad Bruto</label>
+                                            {{form.amount}}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>Proovedor</label>
+                                            <select id="supplier" class="selectpicker form-control" data-live-search="true" {{form.supplier}}
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12"> 
+                                            <label>Tipo de IVA</label><br>
+                                            <input id="vat_rate" name="vat_rate" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12"> 
+                                            <label>&nbsp;</label><br>
+                                            <input id="vat_amount" name="vat_amount" class="form-control" disabled />
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>Fecha</label><br>
+                                            <input id="date" name="date" required {{form.date}}
+                                        </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12"> 
+                                            <label>Total Neto Cantidad(€)</label><br>
+                                            <input id="real_amount" name="real_amount" class="form-control" disabled />
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <textarea class="form-control" {{form.description}}
+                                            </textarea>
+                                        </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12">
+                                            <label>Periodo de Repetición</label><br>
+                                            <input id="period" name="period" class="form-control" min="1" required {{form.period}}
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <div >
+                                                <label>Factura</label>
+                                                <div class="custom-file">
+                                                {% if file %}
+                                                    {% if file.file != "" %}
+                                                        <label id="pdf-file-input" class="custom-file-label" for="file">{{file.file|truncatechars:50}}</label>
+                                                        <input type='file' class='custom-file-input' id='invoice' name='file' />
+                                                    {% else %}
+                                                        <label id="pdf-file-input" class="custom-file-label" for="file"><i class="fa fa-file"></i>&nbsp;&nbsp;Añadir Factura</label>
+                                                        <input type='file' class='custom-file-input' id='invoice' name='file' />
+                                                    {% endif %}
+                                                {% else %}
+                                                    <label id="pdf-file-input" class="custom-file-label" for="file">Añadir Factura</label>
+                                                    <input type='file' class='custom-file-input' id='invoice' name='file' />
+                                                {% endif %}
+                                                </div>
+                                            </div>
+                                            <!-- <div class="form-check" style="margin-top:30px;">
+                                              <input class="form-check-input" type="checkbox" value="" id="apply_all" name="apply_all"value="YES">
+                                              <label class="form-check-label" for="apply_all">
+                                                Aplicar datos ya registrados
+                                              </label>
+                                            </div> -->
+                                        </div>
+                                    </div> 
+                                    <div class="col-lg-12" hidden>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>IVA</label>
+                                            <select id="iva" class="form-control" {{form.iva}}
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>Categorie</label>
+                                            <select id="category" class="form-control" {{form.category}}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" value="{{ user.id }}" name="user">
+                                    <input type="hidden" value="{{form.instance.supplier.id}}" id="sup_id">
+                                </div>
+                            </div>                 
+                        <div class="col-12" style="text-align: center; padding-bottom: 50px;">
+                            <button id="submit" class="btn btn-primary waves-effect" type="submit">ACTUALIZAR</button>    
+                            <a class="btn btn-danger waves-effect" href="{% url 'repeats' %}">CANCELAR</a></center>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block script %}
+    <!-- SweetAlert Plugin Js -->
+    <script src="{% static 'theme/plugins/sweetalert/sweetalert.min.js' %}"></script>
+    <script src="{% static 'theme/plugins/bootstrap-select/js/bootstrap-select.min.js' %}"></script>
+    <script>
+        $('#date').datepicker({
+            format: 'dd/mm/yyyy',
+            });
+        //Invoice
+        $('#invoice').on('change', function(event){
+            var inputFile = event.currentTarget;
+            if(inputFile.files[0].name.length <= 20){
+                $(inputFile).parent()
+                    .find('#pdf-file-input')
+                    .html(inputFile.files[0].name.substring(0,20));
+            }
+            else {
+                $(inputFile).parent()
+                    .find('#pdf-file-input')
+                    .html(inputFile.files[0].name.substring(0,20)+'...');
+            }
+        });
+        
+        var json_sup = '{{ suppliers_json|safe }}';
+        json_sup = json_sup.replace(/\r/gi, "\\r").replace(/\n/gi, "\\n");
+        json_sup = JSON.parse(json_sup);
+        change_sup($("#sup_id").val());
+        function change_sup(supp_id){
+            for(var k in json_sup) {
+                if(json_sup[k].pk == supp_id){
+                    $("#iva").val(json_sup[k].fields.iva);
+                    $("#category").val(json_sup[k].fields.category);
+                    if(json_sup[k].fields.vat_rate == null){
+                        $("#vat_rate").val(0 +"%");
+                    }else{
+                        $("#vat_rate").val(json_sup[k].fields.vat_rate + "%");
+                    }
+                    cal_real_amount();
+                    return;
+                }
+            }
+        }
+        $("#supplier").on("change", function(){
+            change_sup($("#supplier").val());
+
+        });
+        $("#amount").on('keyup', function(){
+            cal_real_amount();
+        });
+        function cal_real_amount(){
+            var amount_str = $('#amount').val().replace(",", ".");
+            var tax_rate = $("#vat_rate").val().replace("%", "");
+            if(tax_rate != "" && amount_str != "" && !isNaN(parseFloat(amount_str)) && isFinite(amount_str)){
+                var vat_amount = parseInt(tax_rate) * parseFloat(amount_str)/100;
+                vat_amount = vat_amount.toFixed(2);
+                var real_amount = parseFloat(amount_str) - vat_amount;
+                $("#vat_amount").val(vat_amount);
+                $("#real_amount").val(real_amount.toFixed(2));
+            }
+        }
+    </script>
+    
+{% endblock %}

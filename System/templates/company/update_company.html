@@ -1,0 +1,82 @@
+{% extends 'basic.html' %}
+{% block style %}
+    {% load static %}
+    <!-- Sweetalert Css -->
+    <link href="{% static 'theme/plugins/sweetalert/sweetalert.css' %}" rel="stylesheet" />
+    <style>
+        #id_country_company{
+            height: 32px;
+            width: 100%;
+            border-radius: 3px;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Basic Examples -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>Actualizar Empresa</h2>
+                        </div>
+                        <form action="." id="company_update" method="post" target="_parent" enctype='multipart/form-data'>
+                            {% csrf_token %}
+                            <div class="body" style="padding: 20px 60px">
+                                <div class="list-unstyled row clearfix">
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>Nombre de Empresa</label>
+                                            {{form.name}}
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>Teléfono</label>
+                                            {{form.phone}}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>Dirección</label>
+                                            {{form.address}}
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>Sitio web</label>
+                                            {{form.web}}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>NIF</label>
+                                            {{form.nif}}
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>País</label><br>
+                                            <select class="selectpicker form-control" data-live-search="true" {{form.country_company}}
+                                            </select>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <textarea class="form-control" {{form.description}}
+                                            </textarea>
+                                        </div>
+                                    </div>   
+                                </div>
+                            </div>                 
+                        <div class="col-12" style="text-align: center; padding-bottom: 50px;">
+                            <button id="submit" class="btn btn-primary waves-effect" type="submit">ACTUALIZAR</button>    
+                            <a class="btn btn-danger waves-effect" href="{% url 'companylist' %}">CANCELAR</a></center>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block script %}
+    <!-- SweetAlert Plugin Js -->
+    <script src="{% static 'theme/plugins/sweetalert/sweetalert.min.js' %}"></script>
+{% endblock %}

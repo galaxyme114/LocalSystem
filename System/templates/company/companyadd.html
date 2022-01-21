@@ -1,0 +1,77 @@
+{% extends 'basic.html' %}
+{% block style %}
+    {% load static %}
+    <!-- Sweetalert Css -->
+    <link href="{% static 'theme/plugins/sweetalert/sweetalert.css' %}" rel="stylesheet" />
+{% endblock %}
+{% block content %}
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Basic Examples -->
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>Añadir Empresa</h2>
+                        </div>
+                        <form action="." id="company_add" method="post" target="_parent" enctype='multipart/form-data'>
+                            {% csrf_token %}
+                            <div class="body" style="padding: 20px 60px">
+                                <div class="list-unstyled row clearfix">
+                                    <div class="col-lg-12 bad">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>Nombre de Empresa</label>
+                                            <input id="name" name="name" type="text" class="form-control" placeholder="Nombre de Empresa" required="True">
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>Teléfono</label>
+                                            <input id="phone" name="phone" type="text" class="form-control" placeholder="Teléfono" required="True">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>Dirección</label>
+                                            <input id="address" name="address" type="text" class="form-control" placeholder="Dirección" required="True">
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>Sitio web</label>
+                                            <input id="web" name="web" type="text" class="form-control" placeholder="www.yours.com" required="True">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>NIF</label>
+                                            <input id="nif" name="nif" type="text" class="form-control" placeholder="NIF" required="True">
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <label>País</label>
+                                            <select id="country" name='country' class="selectpicker form-control" data-live-search="true" required>
+                                                <option value="">----------------------------</option>
+                                                {% for country in countrys %}
+                                                    <option value={{country.id}}>{{ country }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12"> 
+                                            <textarea id="description" name="description" type="text" class="form-control" placeholder="Note:" rows="10" class="w-100"></textarea>
+                                        </div>
+                                    </div>   
+                                </div>
+                            </div>                 
+                        <div class="col-12" style="text-align: center; padding-bottom: 50px;">
+                            <button id="submit" class="btn btn-primary waves-effect" type="submit">ACTUALIZAR</button>    
+                            <a class="btn btn-danger waves-effect" href="{% url 'companylist' %}">CANCELAR</a></center>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block script %}
+    <!-- SweetAlert Plugin Js -->
+    <script src="{% static 'theme/plugins/sweetalert/sweetalert.min.js' %}"></script>
+{% endblock %}

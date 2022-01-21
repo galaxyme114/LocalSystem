@@ -1,0 +1,103 @@
+{% extends 'basic.html' %}
+{% block style %}
+    {% load static %}
+    <!-- Sweetalert Css -->
+    <link href="{% static 'theme/plugins/sweetalert/sweetalert.css' %}" rel="stylesheet" />
+{% endblock %}
+{% block content %}
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Basic Examples -->
+            <div class="row clearfix">
+                <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card profile-card">
+                        <div class="profile-header">&nbsp;</div>
+                        <div class="profile-body">
+                            <div class="image-area">
+                                {% if user.picture %}
+                                    <a href="{{user.picture.url}}" data-sub-html="Demo Description" target="_blank">
+                                        <img src="{{user.picture.url}}" draggable="false" alt="" width="70%" />
+                                    </a>
+                                {% else %}
+                                    <a href="{% static 'images/avatar-default.jpg' %}" data-sub-html="Demo Description" target="_blank">
+                                        <img src="{% static 'images/avatar-default.jpg' %}" width="70%" draggable="false">
+                                    </a>
+                                {% endif %}
+                            </div>
+                            <div class="content-area">
+                                <h3>{{user.username}}</h3>
+                                {% if user.is_staff == True %}
+                                    <p>Administración</p>
+                                {% else %}
+                                    <p>Usuario</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2>DATOS PERSONALES</h2>
+                        </div>
+                        <form action="." id="personal" method="post" target="_parent" enctype='multipart/form-data'>
+                            {% csrf_token %}
+                            <div class="body" style="padding: 20px 60px">
+                                <div class="list-unstyled row clearfix">
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12"> 
+                                                <label>Nombre</label>
+                                                <input id="firstname" name="firstname" type="text" class="form-control" placeholder="" value="{{user.first_name}}" disabled />
+                                            </div>
+                                            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12"> 
+                                                <label>Apellido</label>
+                                                <input id="lastname" name="lastname" type="text" class="form-control" value="{{user.last_name}}" placeholder="" disabled />
+                                            </div>
+                                            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12"> 
+                                                <label>Email</label>
+                                                <input id="email" name="email" type="text" class="form-control" placeholder="" value="{{user.email}}" disabled />
+                                            </div>
+                                            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12"> 
+                                                <label>Usuario</label><br>
+                                                <input id="username" name="username" type="text" class="form-control" placeholder="" value="{{user.username}}" disabled />
+                                            </div>
+                                            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12"> 
+                                                <label>País</label>
+                                                {% if user.country %}
+                                                    <input id="country" name="country" type="text" class="form-control" placeholder="" value="{{user.country.name}}" disabled />
+                                                {% else %}
+                                                    <input id="country" name="country" type="text" class="form-control" placeholder="" value="None" disabled />
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12"> 
+                                                <label>EMPRESA</label>
+                                                <input id="company" name="company" type="text" class="form-control" placeholder="" value="{{user.company.name}}" disabled />
+                                            </div>
+                                            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12"> 
+                                                <label>Teléfono</label>
+                                                <input id="telephone" name="telephone" type="text" class="form-control" placeholder="" value="{{user.telephone}}" disabled />
+                                            </div>
+                                            <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12"> 
+                                                <label>Movil</label>
+                                                <input id="movil" name="movil" type="text" class="form-control" placeholder="" value="{{user.movil}}" disabled />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>                 
+                        <div class="col-12" style="text-align: center; padding-bottom: 50px;">    
+                            <a class="btn btn-primary waves-effect" href="{% url 'userinformation_update' user.id %}">EDITAR</a>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+{% block script %}
+    <!-- SweetAlert Plugin Js -->
+    <script src="{% static 'theme/plugins/sweetalert/sweetalert.min.js' %}"></script>
+{% endblock %}
